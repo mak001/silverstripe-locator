@@ -61,4 +61,9 @@ class DistanceDataExtension extends DataExtension
         }
         return $variables;
     }
+
+    public function getDistance()
+    {
+        return $this->owner->getField('distance');
+    }
 }
