@@ -62,6 +62,11 @@ class DistanceDataExtension extends DataExtension
         return $variables;
     }
 
+    /**
+     * Allows distance to be referenced from graphql
+     *
+     * @return mixed
+     */
     public function getDistance()
     {
         return $this->owner->getField('distance');
