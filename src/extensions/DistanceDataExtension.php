@@ -19,6 +19,7 @@ class DistanceDataExtension extends DataExtension
     {
         $variables = $this->getRequestVariables(Controller::curr()->getRequest());
         $address = $variables['address'];
+        $unit = $variables['unit'];
 
         if ($this->owner->hasMethod('updateAddressValue')) {
             $address = $this->owner->updateAddressValue($address);
@@ -30,9 +31,15 @@ class DistanceDataExtension extends DataExtension
                 $Lat = $response->getLatitude();
                 $Lng = $response->getLongitude();
 
+                // defaults to miles
+                $unitVal = 3959;
+                if ($unit === 'km') {
+                    $unitVal = 6371;
+                }
+
                 $query
                     ->addSelect(array(
-                        '( 3959 * acos( cos( radians(' . $Lat . ') ) * cos( radians( `Lat` ) ) * cos( radians( `Lng` ) - radians(' . $Lng . ') ) + sin( radians(' . $Lat . ') ) * sin( radians( `Lat` ) ) ) ) AS distance',
+                        '( ' . $unitVal . ' * acos( cos( radians(' . $Lat . ') ) * cos( radians( `Lat` ) ) * cos( radians( `Lng` ) - radians(' . $Lng . ') ) + sin( radians(' . $Lat . ') ) * sin( radians( `Lat` ) ) ) ) AS distance',
                     ));
             } else {
                 $query->addSelect('(0) AS distance');
